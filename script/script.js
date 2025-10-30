@@ -540,15 +540,16 @@ function showNewListModal() {
     const modal = document.getElementById("newListModal");
     const emojiGrid = document.getElementById("emojiGrid");
     
-    emojiGrid.innerHTML = emojis.map(emoji => `
-        <button class="emoji-btn text-2xl p-3 rounded-lg border-2 ${
-            emoji === state.selectedEmoji 
-                ? 'border-violet-500 bg-violet-50 dark:bg-violet-950/30 selected' 
-                : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
-        }" data-emoji="${emoji}">
-            ${emoji}
-        </button>
-    `).join('');
+emojiGrid.innerHTML = emojis.map(emoji => `
+    <button class="emoji-btn text-2xl py-4 px-1 rounded-lg border-2 ${
+        emoji === state.selectedEmoji 
+            ? 'border-violet-500 bg-violet-50 dark:bg-violet-950/30 selected' 
+            : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+    }" data-emoji="${emoji}">
+        ${emoji}
+    </button>
+`).join('');
+
     
     modal.classList.remove("hidden");
     
