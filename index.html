@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Todo List Moderna</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: {} },
+    };
+  </script>
+
+  <link rel="stylesheet" href="./styles/index.css" />
+</head>
+<body class="overflow-hidden">
+  <div id="app"
+       class="flex h-screen w-full bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 transition-colors duration-300">
+
+    <!-- Sidebar -->
+    <aside class=" aside-menu  h-full w-72 md:w-80 bg-white dark:bg-slate-900 shadow-xl md:shadow-none z-50  duration-300 flex flex-col">
+      
+      <!-- Header -->
+      <div class="border-b border-gray-100 dark:border-gray-800 p-5 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-500 flex items-center justify-center shadow-lg shadow-violet-500/30">
+            <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z">
+              </path>
+            </svg>
+          </div>
+          <div>
+            <h1 class="font-bold text-gray-900 dark:text-gray-100 text-base sm:text-lg">Minhas Listas</h1>
+            <p class="text-xs text-gray-500 dark:text-gray-400">Organize suas tarefas</p>
+          </div>
+        </div>
+        <button id="themeToggle"
+          class="h-9 w-9 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center justify-center transition-colors">
+          <svg id="moonIcon" class="h-5 w-5 text-gray-600 dark:text-gray-400 hidden dark:block" fill="none" stroke="currentColor"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+          </svg>
+          <svg id="sunIcon" class="h-5 w-5 text-gray-600 dark:text-gray-400 block dark:hidden" fill="none" stroke="currentColor"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
+            </path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Content -->
+      <div class="flex-1 p-3 bg-white/30 dark:bg-slate-900/30 backdrop-blur-sm overflow-y-auto">
+        <div id="listsContainer"></div>
+      </div>
+
+      <!-- Footer -->
+      <div class="border-t border-gray-100 dark:border-gray-800 p-3 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm">
+        <button id="newListBtn"
+          class="w-full h-12 bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600 text-white shadow-lg shadow-violet-500/30 rounded-lg font-medium transition-all">
+          <span class="flex items-center justify-center gap-2">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Nova Lista
+          </span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main id="mainContent" class="flex-1 overflow-hidden flex flex-col relative">
+
+      <!-- Mobile Header -->
+      <div class="md:hidden flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-800 bg-white/70 dark:bg-slate-900/70 backdrop-blur-sm sticky top-0 z-40">
+     
+        <h1 class="font-bold text-gray-900 dark:text-gray-100 text-lg">TodoList </h1>
+        <div class="w-10"></div>
+           <button class="aside-menu-btn flex items-center justify-center w-10 h-10 rounded-lg bg-violet-500 text-white">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Header -->
+      <div class="border-b border-gray-100 dark:border-gray-800 p-5 md:p-8 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm">
+        <div class="max-w-4xl mx-auto">
+          <div id="listHeader" class="flex items-center gap-4 mb-6"></div>
+
+          <!-- Search -->
+          <div class="relative mb-4">
+            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" fill="none"
+              stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            <input id="searchInput" type="text" placeholder="Buscar tarefas..."
+              class="pl-10 h-12 bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 dark:text-gray-100 rounded-lg w-full px-4 focus:outline-none focus:ring-2 focus:ring-violet-500" />
+          </div>
+
+          <!-- Add Task Button -->
+          <button id="addTaskBtn"
+            class="w-full h-14 bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600 text-white shadow-lg shadow-violet-500/30 rounded-lg font-medium transition-all">
+            <span class="flex items-center justify-center gap-2">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+              Adicionar Nova Tarefa
+            </span>
+          </button>
+
+          <!-- Add Task Form -->
+          <div id="addTaskForm"
+            class="hidden bg-white dark:bg-slate-800 rounded-xl border-2 border-violet-200 dark:border-violet-900 p-4 shadow-lg mt-4">
+            <input id="newTaskInput" type="text" placeholder="O que você precisa fazer?"
+              class="mb-3 h-12 border border-gray-200 dark:border-gray-700 dark:bg-slate-900 dark:text-gray-100 rounded-lg w-full px-4 focus:outline-none focus:ring-2 focus:ring-violet-500" />
+            <div class="flex items-center gap-2 mb-3">
+              <select id="prioritySelect"
+                class="h-9 px-3 border border-gray-200 dark:border-gray-700 dark:bg-slate-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500">
+                <option value="low">🟢 Baixa</option>
+                <option value="medium" selected>🟡 Média</option>
+                <option value="high">🔴 Alta</option>
+              </select>
+            </div>
+            <div class="flex gap-2">
+              <button id="confirmAddTask"
+                class="flex-1 h-10 bg-violet-600 hover:bg-violet-700 text-white rounded-lg font-medium transition-colors">
+                Adicionar
+              </button>
+              <button id="cancelAddTask"
+                class="h-10 px-4 border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tasks -->
+      <div class="flex-1 overflow-y-auto p-5 md:p-8">
+        <div id="tasksContainer" class="max-w-4xl mx-auto"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal Nova Lista -->
+  <div id="newListModal"
+       class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+    <div class="bg-white dark:bg-slate-800 rounded-xl p-6 w-full max-w-md mx-4 shadow-2xl">
+      <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Criar Nova Lista</h2>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nome da Lista</label>
+          <input id="newListNameInput" type="text" placeholder="Ex: Projetos Pessoais"
+            class="w-full h-12 px-4 border border-gray-300 dark:border-gray-700 dark:bg-slate-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Escolha um Ícone</label>
+          <div id="emojiGrid" class="grid grid-cols-6 gap-2"></div>
+        </div>
+        <div class="flex gap-2">
+          <button id="confirmNewList"
+            class="flex-1 h-11 bg-violet-600 hover:bg-violet-700 text-white rounded-lg font-medium transition-colors">
+            Criar Lista
+          </button>
+          <button id="cancelNewList"
+            class="h-11 px-4 border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-gray-100 rounded-lg transition-colors">
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="./script/script.js"></script>
+</body>
+</html>
